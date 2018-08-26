@@ -1,17 +1,12 @@
 #include <stdio.h>
 
 #include <hal/log.h>
+#include <hal/wdt.h>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
 #include <driver/dac.h>
-
-#include <esp_ota_ops.h>
-#include <esp_task_wdt.h>
-
-#include <soc/timer_group_reg.h>
-#include <soc/timer_group_struct.h>
 
 #include "target.h"
 
@@ -126,26 +121,18 @@ void task_rc_update(void *arg)
     // are fired in the same CPU as this task.
     air_radio_init(&radio);
     // Enable the WDT for this task
-    ESP_ERROR_CHECK(esp_task_wdt_add(NULL));
+    wdt_hal_enable();
     for (;;)
     {
         rc_update(&rc);
         // Feed the WTD using the registers directly. Otherwise
         // we take too long here.
-        TIMERG0.wdt_wprotect = TIMG_WDT_WKEY_VALUE;
-        TIMERG0.wdt_feed = 1;
-        TIMERG0.wdt_wprotect = 0;
+        wdt_hal_reset();
     }
 }
 
 void app_main()
 {
-    const esp_partition_t *boot_partition = esp_ota_get_boot_partition();
-    if (boot_partition)
-    {
-        LOG_I(TAG, "Booted from partition %s", boot_partition->label);
-    }
-
     ota_init();
 
     config_init();

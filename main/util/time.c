@@ -4,9 +4,6 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-#include <esp_attr.h>
-#include <esp_timer.h>
-
 #include "time.h"
 
 unsigned long IRAM_ATTR millis(void)
