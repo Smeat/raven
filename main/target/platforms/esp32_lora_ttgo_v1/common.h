@@ -1,5 +1,4 @@
-// TODO: fix this include mess
-#include "../../../platform/platform_macros.h"
+#include <platform/platform_macros.h>
 
 // User button
 #define PIN_BUTTON_1 0
