@@ -2,11 +2,10 @@
 
 #include <hal/log.h>
 #include <hal/wdt.h>
+#include <hal/dac.h>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-
-#include <driver/dac.h>
 
 #include "target.h"
 
@@ -140,8 +139,7 @@ void app_main()
 
     // Disable DAC output on GPIO25 and GPIO26. It's enabled by default and
     // can alter the output levels otherwise.
-    ESP_ERROR_CHECK(dac_output_disable(DAC_CHANNEL_1));
-    ESP_ERROR_CHECK(dac_output_disable(DAC_CHANNEL_2));
+    dac_hal_disable_all_channels();
 
     air_addr_t addr = config_get_addr();
     rmp_init(&rmp, &addr);

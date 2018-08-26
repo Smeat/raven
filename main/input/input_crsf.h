@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include <driver/uart.h>
+#include <hal/uart.h>
 
 #include "config/settings.h"
 

@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <driver/gpio.h>
-
 #include "output/output.h"
 
 #include "msp/msp_telemetry.h"

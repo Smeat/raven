@@ -2,8 +2,7 @@
 #include <string.h>
 
 #include <hal/mutex.h>
-
-#include <driver/uart.h>
+#include <hal/uart.h>
 
 #include "io/pins.h"
 

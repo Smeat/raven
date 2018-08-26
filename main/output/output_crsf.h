@@ -1,7 +1,5 @@
 #pragma once
 
-#include <driver/gpio.h>
-
 #include "msp/msp_telemetry.h"
 
 #include "output/output.h"

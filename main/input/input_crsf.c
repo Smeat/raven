@@ -1,6 +1,3 @@
-#include <driver/uart.h>
-#include <soc/uart_struct.h>
-
 #include <hal/log.h>
 
 #include "config/settings_rmp.h"

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <driver/gpio.h>
-
 #include "msp/msp.h"
 #include "msp/msp_serial.h"
 #include "output.h"
