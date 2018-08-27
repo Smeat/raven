@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <driver/spi_master.h>
+#include <hal/spi.h>
 
 #include "air/air_radio.h"
 

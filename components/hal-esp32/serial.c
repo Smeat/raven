@@ -1,4 +1,4 @@
-#include <hal/uart.h>
+#include <hal/serial.h>
 #include <hal/mutex.h>
 
 #include <string.h>

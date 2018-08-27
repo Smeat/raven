@@ -48,7 +48,9 @@ static air_radio_t radio = {
 
 static rc_t rc;
 static rmp_t rmp;
+#ifdef USE_P2P
 static p2p_t p2p;
+#endif
 static ui_t ui;
 
 static void shutdown(void)
@@ -103,7 +105,7 @@ void task_ui(void *arg)
         }
     }
 }
-
+#ifdef USE_P2P
 void task_rmp(void *arg)
 {
     p2p_start(&p2p);
@@ -113,6 +115,7 @@ void task_rmp(void *arg)
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 }
+#endif
 
 void task_rc_update(void *arg)
 {
@@ -142,20 +145,25 @@ void app_main()
     dac_hal_disable_all_channels();
 
     air_addr_t addr = config_get_addr();
+
     rmp_init(&rmp, &addr);
 
     settings_rmp_init(&rmp);
-
+#ifdef USE_P2P
     p2p_init(&p2p, &rmp);
+#endif
 
     rc_init(&rc, &radio, &rmp);
 
     raven_ui_init();
 
     xTaskCreatePinnedToCore(task_rc_update, "RC", 4096, NULL, 1, NULL, 1);
-
+#ifdef USE_BLUETOOTH
     xTaskCreatePinnedToCore(task_bluetooh, "BLUETOOTH", 4096, &rc, 2, NULL, 0);
+#endif
+#ifdef USE_P2P
     xTaskCreatePinnedToCore(task_rmp, "RMP", 4096, NULL, 2, NULL, 0);
+#endif
 
     // Start updating the UI after everything else is set up, since it queries other subsystems
     xTaskCreatePinnedToCore(task_ui, "UI", 4096, NULL, 1, NULL, 0);

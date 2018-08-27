@@ -1,11 +1,10 @@
 #ifndef COMPONENTS_HAL_ESP32_INCLUDE_HAL_UART_H_
 #define COMPONENTS_HAL_ESP32_INCLUDE_HAL_UART_H_
 
-#include <driver/uart.h>
-
 #include <stdbool.h>
 
-// TODO: fix this include mess
+typedef void* uart_isr_handle_t; // TODO
+
 #include <io/serial.h>
 
 typedef struct serial_port_s serial_port_t;

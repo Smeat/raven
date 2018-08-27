@@ -1,8 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-
-#include <hal/uart.h>
+#include <hal/serial.h>
 
 #include "config/settings.h"
 

@@ -1,0 +1,27 @@
+ASFLAGS       = -g
+ROOT         := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+SRC_DIR       = $(ROOT)/main
+INCLUDE_DIRS  = $(SRC_DIR)
+
+MODULES = $(SRC_DIR)/air $(SRC_DIR)/config $(SRC_DIR)/input $(SRC_DIR)/io $(SRC_DIR)/msp $(SRC_DIR)/output $(SRC_DIR)/platform $(SRC_DIR)/protocols $(SRC_DIR)/rc $(SRC_DIR)/util
+GENERIC_SRCS    = $(shell find $(MODULES) -iname '*.c') $(SRC_DIR)/main.c
+GENERIC_HEADERS = $(GENERIC_SRCS:.c=.h)
+
+OBJECT_DIR      := $(ROOT)/obj
+TARGET_LC       := $(shell echo $(TARGET) | tr '[:upper:]' '[:lower:]')
+TARGET_DIR      := $(PLATFORMS_DIR)/$(TARGET_LC)
+TARGET_MAKEFILE := $(TARGET_DIR)/target.mk
+
+all  : board
+
+ifneq ($(wildcard $(TARGET_MAKEFILE)),)
+  #fine, target exists
+  include $(TARGET_MAKEFILE)
+  include $(ARCH_MAKEFILE)
+else
+  #does not exist
+  $(error UNSUPPORTED Target ($(TARGET)) given. could not find makefile at $(TARGET_MAKEFILE). aborting)
+endif
+
+
+all  : board

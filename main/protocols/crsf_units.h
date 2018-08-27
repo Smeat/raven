@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdint.h>
 
-#include <arpa/inet.h>
+#include <hal/inet.h>
 
 // XXX: CRSF always uses big endian on the wire
 

@@ -298,7 +298,7 @@ bool output_update(output_t *output, time_micros_t now)
                 output->next_rc_update_no_later_than = TIME_MICROS_MAX;
             }
         }
-        // Restore the channel data we ovewrote
+        // Restore the channel data we overwrote
         if (rssi_channel)
         {
             rssi_channel->value = channel_value;

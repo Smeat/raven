@@ -2,8 +2,7 @@
 #include <string.h>
 
 #include <hal/mutex.h>
-#include <hal/uart.h>
-
+#include <hal/serial.h>
 #include "io/pins.h"
 
 #include "util/macros.h"

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#include "target.h"
+#include <target.h>
 
 #include "air/air.h"
 #include "air/air_band.h"
