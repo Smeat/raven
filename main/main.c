@@ -43,13 +43,15 @@
 static const char *TAG = "main";
 
 static air_radio_t radio = {
-    .sx127x[0].mosi = PIN_SX127X_MOSI,
-    .sx127x[0].miso = PIN_SX127X_MISO,
-    .sx127x[0].sck = PIN_SX127X_SCK,
-    .sx127x[0].cs = PIN_SX127X_CS,
-    .sx127x[0].rst = PIN_SX127X_RST,
-    .sx127x[0].dio0 = PIN_SX127X_DIO0,
-    .sx127x[0].output_type = SX127X_OUTPUT_TYPE,
+    .sx127x[0] = {
+        .mosi = PIN_SX127X_MOSI,
+        .miso = PIN_SX127X_MISO,
+        .sck = PIN_SX127X_SCK,
+        .cs = PIN_SX127X_CS,
+        .rst = PIN_SX127X_RST,
+        .dio0 = PIN_SX127X_DIO0,
+        .output_type = SX127X_OUTPUT_TYPE,
+    },
 };
 
 static rc_t rc;
