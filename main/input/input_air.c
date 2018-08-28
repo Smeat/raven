@@ -337,7 +337,7 @@ static bool input_air_update(void *input, rc_data_t *data, time_micros_t now)
 {
     input_air_t *input_air = input;
     air_tx_packet_t in_pkt;
-    int rssi, snr, lq;
+    int rssi = 0, snr, lq;
     bool updated = false;
     air_radio_t *radio = input_air->air_config.radio;
 
@@ -359,8 +359,17 @@ static bool input_air_update(void *input, rc_data_t *data, time_micros_t now)
             input_air->consecutive_lost_packets = 0;
             input_air->rx_success++;
             input_air->tx_seq = in_pkt.seq;
-
-            rssi = air_radio_rssi(radio, &snr, &lq);
+            int temp_rssi = 0, best_radio = 0;
+            for (int i = 0; i < air_radio_get_count(radio); ++i)
+            {
+                temp_rssi = air_radio_rssi_index(radio, &snr, &lq, i);
+                if (temp_rssi > rssi)
+                {
+                    rssi = temp_rssi;
+                    best_radio = i;
+                }
+            }
+            air_radio_set_active(radio, best_radio); // Set radio with best rssi as active
             int last_error = air_radio_frequency_error(radio);
             input_air->air.freq_table.abs_errors[input_air->tx_seq] += last_error;
             input_air->air.freq_table.last_errors[input_air->tx_seq] = last_error;

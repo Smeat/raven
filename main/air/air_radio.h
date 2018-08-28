@@ -35,7 +35,15 @@ void air_radio_set_payload_size(air_radio_t *radio, size_t size);
 size_t air_radio_read(air_radio_t *radio, void *buf, size_t size);
 void air_radio_send(air_radio_t *radio, const void *buf, size_t size);
 
+/**
+ * Get RSSI for current active radio
+ */
 int air_radio_rssi(air_radio_t *radio, int *snr, int *lq);
+
+/**
+ * Get RSSI for given radio index
+ */
+int air_radio_rssi_index(air_radio_t *radio, int *snr, int *lq, int radio_index);
 
 typedef void (*air_radio_callback_t)(air_radio_t *radio, air_radio_callback_reason_e reason, void *data);
 void air_radio_set_callback(air_radio_t *radio, air_radio_callback_t callback, void *callback_data);
@@ -48,3 +56,6 @@ time_micros_t air_radio_uplink_cycle_time(air_radio_t *radio, air_mode_e mode);
 bool air_radio_cycle_is_full(air_radio_t *radio, air_mode_e mode, unsigned seq);
 time_micros_t air_radio_tx_failsafe_interval(air_radio_t *radio, air_mode_e mode);
 time_micros_t air_radio_rx_failsafe_interval(air_radio_t *radio, air_mode_e mode);
+
+void air_radio_set_active(air_radio_t *radio, int index);
+int air_radio_get_count(air_radio_t *radio);
