@@ -114,7 +114,17 @@ void air_radio_set_payload_size(air_radio_t *radio, size_t size)
 
 size_t air_radio_read(air_radio_t *radio, void *buf, size_t size)
 {
-    // TODO: shall we just read both radios to avoid losing any packets or switch based on rssi? Do we have to clear the buffer?
+    // TODO: shall we just read both radios to avoid losing any packets or switch based on rssi?
+    for (int i = 0; i < RADIO_NUM; ++i)
+    {
+        if (&radio->sx127x[i] != radio) // Don't clear cache of active radio
+        {
+            // Page 67 Table 28. Switching from idle to rx clears the fifo
+            sx127x_idle(&radio->sx127x[i]);
+            sx127x_enable_continous_rx(&radio->sx127x[i]);
+        }
+    }
+
     return sx127x_read(radio->active, buf, size);
 }
 
