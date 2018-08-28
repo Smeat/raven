@@ -163,6 +163,7 @@ void app_main()
 
     p2p_init(&p2p, &rmp);
 
+    radio.active = radio.sx127x;
     rc_init(&rc, &radio, &rmp);
 
     raven_ui_init();
