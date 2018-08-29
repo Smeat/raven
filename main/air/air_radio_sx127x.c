@@ -83,48 +83,40 @@ void air_radio_set_mode(air_radio_t *radio, air_mode_e mode)
 
 void air_radio_set_bind_mode(air_radio_t *radio)
 {
-    sx127x_set_tx_power(&radio->sx127x, 1);
-    sx127x_set_lora_sync_word(&radio->sx127x, SX127X_DEFAULT_LORA_SYNC_WORD);
+    // TODO: only using the active radio should be sufficient?
+    sx127x_set_tx_power(radio->active, 1);
+    sx127x_set_lora_sync_word(radio->active, SX127X_DEFAULT_LORA_SYNC_WORD);
     // Same as fast parameters as short range mode
     air_radio_set_mode(radio, AIR_MODE_FASTEST);
-    sx127x_set_payload_size(&radio->sx127x, sizeof(air_bind_packet_t));
+    sx127x_set_payload_size(radio->active, sizeof(air_bind_packet_t));
 }
 
 void air_radio_set_powertest_mode(air_radio_t *radio)
 {
     air_radio_set_mode(radio, AIR_MODE_LONGEST);
-    sx127x_set_lora_spreading_factor(&radio->sx127x, 12);
-    sx127x_set_lora_signal_bw(&radio->sx127x, SX127X_LORA_SIGNAL_BW_250);
+    APPLY_ALL_RADIOS(sx127x_set_lora_spreading_factor, radio, 12);
+    APPLY_ALL_RADIOS(sx127x_set_lora_signal_bw, radio, SX127X_LORA_SIGNAL_BW_250);
 }
 
 bool air_radio_is_tx_done(air_radio_t *radio)
 {
-    return sx127x_is_tx_done(&radio->sx127x);
+    return sx127x_is_tx_done(radio->active);
 }
 
 bool air_radio_is_rx_done(air_radio_t *radio)
 {
-    return sx127x_is_rx_done(&radio->sx127x);
+    return sx127x_is_rx_done(radio->active);
 }
 
 void air_radio_set_payload_size(air_radio_t *radio, size_t size)
 {
-    sx127x_set_payload_size(&radio->sx127x, size);
+    APPLY_ALL_RADIOS(sx127x_set_payload_size, radio, size);
 }
 
 size_t air_radio_read(air_radio_t *radio, void *buf, size_t size)
 {
     // TODO: shall we just read both radios to avoid losing any packets or switch based on rssi?
-    for (int i = 0; i < RADIO_NUM; ++i)
-    {
-        if (&radio->sx127x[i] != radio) // Don't clear cache of active radio
-        {
-            // Page 67 Table 28. Switching from idle to rx clears the fifo
-            sx127x_idle(&radio->sx127x[i]);
-            sx127x_enable_continous_rx(&radio->sx127x[i]);
-        }
-    }
-
+    // TODO: clear fifo here or on switch?
     return sx127x_read(radio->active, buf, size);
 }
 
@@ -146,7 +138,11 @@ int air_radio_rssi_index(air_radio_t *radio, int *snr, int *lq, int radio_index)
 
 void air_radio_set_active(air_radio_t *radio, int index)
 {
+    // TODO: do we have to reset state?
     radio->active = &radio->sx127x[index];
+
+    APPLY_ALL_RADIOS(sx127x_idle, radio);
+    APPLY_ALL_RADIOS(sx127x_enable_continous_rx, radio);
 }
 
 int air_radio_get_count(air_radio_t *radio)
